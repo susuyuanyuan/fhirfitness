@@ -1,0 +1,30 @@
+.grid-container {
+    font-family: "Lucida Console";
+    color: #555555;
+    margin-top: 2vh;
+    margin-left: 4vh;
+    margin-right: 4vh;
+}
+
+.basic-info {
+    display: flex;
+    margin-bottom: 6vh;
+}
+
+.basic-info-item {
+    text-align: center;
+    background-color: #cdc9c3;
+    padding: 20px 30px;
+}
+.timer {
+    color: #fbf7f0;
+    background-color: #555555;
+    border-radius: 6px;
+}
+
+.row:nth-of-type(even){
+    background-color: #fbf7f0;
+  }
+.row:nth-of-type(odd){
+    background-color: #cdc9c3;
+}
