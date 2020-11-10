@@ -1,7 +1,7 @@
-import React from 'react';
-import Info from './Info';
-import Workout from './Workout';
-import './styles.css';
+import React from "react";
+import Info from "./Info";
+import Workout from "./Workout";
+import "./styles.css";
 
 function App() {
   return (
