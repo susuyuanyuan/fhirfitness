@@ -16,7 +16,7 @@
   background-color: #cdc9c3;
   padding: 20px 30px;
 }
-.timer {
+.button {
   color: #fbf7f0;
   background-color: #555555;
   border-radius: 6px;
@@ -27,4 +27,8 @@
 }
 .row:nth-of-type(odd) {
   background-color: #cdc9c3;
+}
+
+.warning {
+  text-decoration-color: red;
 }

@@ -11,11 +11,11 @@ const Info = () => {
       </div>
       <div className="basic-info">
         <div className="basic-info-item">
-          <p>Height(kg)</p>
+          <p>Height(cm)</p>
           <p>{height}</p>
         </div>
         <div className="basic-info-item" style={{ backgroundColor: "#fbf7f0" }}>
-          <p>Weight(cm)</p>
+          <p>Weight(kg)</p>
           <p>{weight}</p>
         </div>
         <div className="basic-info-item">

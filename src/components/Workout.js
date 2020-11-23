@@ -1,20 +1,56 @@
-import { notStrictEqual } from "assert";
 import React, { useEffect, useState } from "react";
 import "./styles.css";
 const Workout = () => {
-  const defaultTimer = 3;
+  const defaultTimer = 60;
   const [isActive, setIsActive] = useState(false);
   const [counting, setCounting] = useState(null);
   const [timer, setTimer] = useState(defaultTimer);
-  const [curlUp, setCurlUp] = useState(false);
-  const [pushUp, setPushUp] = useState(false);
-  const [jumpingJacks, setJumpingJacks] = useState(false);
-  const [squat, setSquat] = useState(false);
-  const [plankJacks, setPlankJacks] = useState(false);
+  const [taskDone, setTaskDone] = useState(false);
+  const [link, setLink] = useState(null);
+  const [tasks, setTasks] = useState([
+    { task: "Curl Up", completed: false },
+    { task: "Push Up", completed: false },
+    { task: "Jumping Jacks", completed: false },
+    { task: "Squat", completed: false },
+    { task: "Half Burpees", completed: false },
+    { task: "Plank", completed: false },
+    { task: "Jump Squat", completed: false },
+    { task: "Plank to Jump Squat", completed: false },
+    { task: "Twisting Mountain Climbing", completed: false },
+    { task: "Plank Jumps", completed: false },
+  ]);
 
-  const complete = curlUp && pushUp && jumpingJacks && squat && plankJacks;
-  const tbodyCls = "col-sm mt-2 mb-2";
-  const theadCls = "col-sm mt-3 mb-3 font-weight-bold";
+  // get the certain user
+  const allUsers = useSelector((state) => {
+    return state.allUsers;
+  });
+
+  let user = null;
+  if (id !== "") {
+    user = allUsers.find((user) => user._id === id);
+    if (!user) {
+      console.error("Can't find this user: " + id);
+      history.goBack();
+    }
+  }
+
+  /*
+      { task: "Jumping Jacks", completed: false },
+    { task: "Squat", completed: false },
+    { task: "Half Burpees", completed: false },
+    { task: "Plank", completed: false },
+    { task: "Jump Squat", completed: false },
+    { task: "Plank to Jump Squat", completed: false },
+    { task: "Twisting Mountain Climbing", completed: false },
+    { task: "Plank Jumps", completed: false },
+  */
+
+  // styling
+  const tbodyClass = "col-sm mt-2 mb-2";
+  const theadClass = "col-sm mt-3 mb-3 font-weight-bold";
+
+  // today
+  const today = require("moment")(new Date()).format("YYYY-MM-DD");
 
   useEffect(() => {
     let interval = null;
@@ -43,15 +79,15 @@ const Workout = () => {
   const renderTimer = (task) => {
     return (
       <div>
-        <div>{counting === task && isActive ? timer : null}</div>
+        <div>{counting === task && isActive ? timer + " s" : null}</div>
         <div>
           {counting === null ? (
-            <button className="timer" onClick={() => handleStart(task)}>
+            <button className="button" onClick={() => handleStart(task)}>
               Start
             </button>
           ) : null}
           {counting === task ? (
-            <button className="timer" onClick={() => reset()}>
+            <button className="button" onClick={() => reset()}>
               Retake Challenge
             </button>
           ) : null}
@@ -60,104 +96,89 @@ const Workout = () => {
     );
   };
 
+  const handleTask = (task) => {
+    let tasksCopy = [...tasks];
+    let index = tasksCopy.findIndex((ele) => ele.task === task);
+    if (index > -1) {
+      tasksCopy[index].completed = true;
+      setTasks(tasksCopy);
+    }
+    let indexOfToday = tasks.find((ele) => ele.completed === false);
+    if (typeof indexOfToday !== "object") {
+      setTaskDone(true);
+    }
+  };
+
+  const handleLink = (url) => {
+    if (url.search("https://youtu.be") !== -1) {
+      setLink(url);
+    }
+  };
+
+  const submitRecord = () => {
+    const added_record = {
+      date: today,
+      url: link,
+    };
+
+    // dispatch(addRecord(added_record, history));
+  };
+
   return (
     <div>
       <div>
-        <h3>Record Your Activity Today</h3>
+        <h3>Record Your Activity Today {today}</h3>
       </div>
-      <div className="container ml-0 table-striped">
+      <div className="container ml-0 mb-5 table-striped">
         <div className="row">
-          <div className={theadCls}>Tasks</div>
-          <div className={theadCls}>Timer</div>
-          <div className={theadCls}>Mark Done</div>
+          <div className={theadClass}>Tasks</div>
+          <div className={theadClass}>Timer</div>
+          <div className={theadClass}>Mark Done</div>
         </div>
-        <div className="row">
-          <div className={tbodyCls}>2 Minute Curl Up</div>
-          <div className={tbodyCls}>
-            {curlUp ? null : renderTimer("Curl Up")}
-          </div>
-          <div className={tbodyCls}>
-            {curlUp ? (
-              <p>DONE</p>
-            ) : (
-              <button
-                className="workout-button"
-                onClick={() => setCurlUp(true)}
-              >
-                Click to Mark Curl Up DONE
-              </button>
-            )}
-          </div>
-        </div>
-        <div className="row">
-          <div className={tbodyCls}>2 Minute Push Up</div>
-          <div className={tbodyCls}>
-            {pushUp ? null : renderTimer("Push Up")}
-          </div>
-          <div className={tbodyCls}>
-            {pushUp ? (
-              <p>DONE</p>
-            ) : (
-              <button
-                className="workout-button"
-                onClick={() => setPushUp(true)}
-              >
-                Click to Mark Push Up DONE
-              </button>
-            )}
-          </div>
-        </div>
-        <div className="row">
-          <div className={tbodyCls}>2 Minute Jumping Jacks</div>
-          <div className={tbodyCls}>
-            {jumpingJacks ? null : renderTimer("Jumping Jacks")}
-          </div>
-          <div className={tbodyCls}>
-            {jumpingJacks ? (
-              <p>DONE</p>
-            ) : (
-              <button
-                className="workout-button"
-                onClick={() => setJumpingJacks(true)}
-              >
-                Click to Mark Jumping Jacks DONE
-              </button>
-            )}
-          </div>
-        </div>
-        <div className="row">
-          <div className={tbodyCls}>2 Minute Squat</div>
-          <div className={tbodyCls}>{squat ? null : renderTimer("Squat")}</div>
-          <div className={tbodyCls}>
-            {squat ? (
-              <p>DONE</p>
-            ) : (
-              <button className="workout-button" onClick={() => setSquat(true)}>
-                Click to Mark Squat DONE
-              </button>
-            )}
-          </div>
-        </div>
-        <div className="row">
-          <div className={tbodyCls}>2 Minute Plank Jacks</div>
-          <div className={tbodyCls}>
-            {plankJacks ? null : renderTimer("Plank Jacks")}
-          </div>
-          <div className={tbodyCls}>
-            {plankJacks ? (
-              <p>DONE</p>
-            ) : (
-              <button
-                className="workout-button"
-                onClick={() => setPlankJacks(true)}
-              >
-                Click to Mark Plank Jacks DONE
-              </button>
-            )}
-          </div>
-        </div>
+        {tasks.map((task) => {
+          return (
+            <div className="row" key={task.task}>
+              <div className={tbodyClass}>{task.task}</div>
+              <div className={tbodyClass}>
+                {task.completed ? null : renderTimer(task.task)}
+              </div>
+              <div className={tbodyClass}>
+                {task.completed ? (
+                  <p>DONE</p>
+                ) : (
+                  <button
+                    className="button"
+                    onClick={() => handleTask(task.task)}
+                  >
+                    Click to Mark Completed
+                  </button>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
-      <div className="mt-3">{complete ? <p>Tasks Done!</p> : null}</div>
+      <div>
+        {taskDone ? (
+          <div>
+            <label>Paste your YouTube Video URL here:</label>
+            <input type="text" onChange={(e) => handleLink(e.target.value)} />
+            <button
+              className="button ml-3"
+              type="submit"
+              disabled={link === null}
+              onClick={submitRecord}
+            >
+              Submit
+            </button>
+            <p style={{ color: "red" }}>
+              {link === null
+                ? "Please make sure to provide valid YouTube URL"
+                : null}
+            </p>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 };
